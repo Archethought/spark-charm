@@ -1,0 +1,7 @@
+
+SPARK_DIR="/usr/lib"
+export SPARK_HOME=/usr/lib/spark
+export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64
+export PATH=$SPARK_HOME/bin:$SPARK_HOME/sbin:$PATH
+
+

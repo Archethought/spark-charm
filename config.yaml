@@ -1,0 +1,22 @@
+options:
+  spark_executor_memory:
+    type: string
+    default: 512m
+    description: |
+       Amount of memory to use per executor process, in the same format as 
+       JVM memory strings (e.g. 512m, 2g).
+  spark_total_executor_cores:
+    type: int
+    default: 8
+    description: |
+       Number of cores available to executor process
+  log4j_rootCategory:
+    type: string
+    default: "WARN, console"
+    description: |
+       loging levels: ALL, DEBUG, INFO, WARN, ERROR, FATAL, OFF
+  spark_serializer:
+    type: string
+    default: org.apache.spark.serializer.KryoSerializer
+    description: |
+        Spark can also use the Kryo library (version 2) to serialize objects more quickly. Kryo is significantly faster and more compact than Java serialization (often as much as 10x), but does not support all Serializable types and requires you to register the classes you’ll use in the program in advance for best performance.
