@@ -25,9 +25,7 @@ def install_base_pkg():
     au = ArchiveUrlFetchHandler()
     os.chdir(home)
     filename = pkgName+'.'+compType
-    # tmpfile = au.download(pkgpath+filename, '/tmp/spark_1.2.0.tgz')
-    tmpfile = au.download_and_validate(pkgpath+filename, '04e13b1ae4ce51d8dcf54ac5df656957bf5d5d78')
-    # tmpfile = au.download_and_validate(pkgpath+filename, '705ae54c5e072fbc13e5f41f7302fad802e507cf')
+    tmpfile = au.download_and_validate(pkgpath+filename, '57d19d43aa058acefbde32b2304678a8b07eaa80')
     filepath = os.path.join(os.path.sep, home, filename)
     shutil.move(tmpfile, filepath)
     if os.path.isdir(spark_home):
@@ -54,18 +52,11 @@ def extract_tar(tarFileName, target_dir):
 def spark_configure():
     log("==> spark_configure", "INFO")
     # remove slaves from all the nodes - it will be added just to master node later
-    os.remove(os.path.join(os.path.sep,spark_conf_dir,"slaves"))
-    # start of patch, MUST be remove for the next spark release 
-    src = os.path.join(os.environ['CHARM_DIR'], 'files','archives','run-example')
-    dst = os.path.join(os.path.sep, spark_home, 'bin', 'run-example')
-    copyfile(src, dst)
-    log("<== spark_configure", "INFO")
-    #cat files/upstart/defaults >> /home/ubuntu/.bashrc
-    fileSrc = os.path.join(os.environ['CHARM_DIR'],'files', 'upstart','defaults')    
-    mergeFiles(bashrcFile, fileSrc)
+    try:
+        os.remove(os.path.join(os.path.sep,spark_conf_dir,"slaves"))
+    except:
+        log("no slaves to remove", "INFO")
 
-    # end of patch
-    
 def openPort(node):
     if node == "master":
         open_port(7077)
@@ -104,8 +95,8 @@ def setLogging():
         
         
        
-pkgpath="http://www.eng.lsu.edu/mirrors/apache/spark/spark-1.2.0/"
-pkgName="spark-1.2.0"
+pkgpath="http://apache.mirrors.pair.com/spark/spark-1.2.0/"
+pkgName="spark-1.2.0-bin-hadoop2.4"
 compType="tgz"
 spark_dir_name = "spark"
 home  = os.path.join(os.path.sep, "home", "ubuntu")
@@ -126,7 +117,7 @@ hooks = Hooks()
 @hooks.hook('install')
 def install():
     install_base_pkg()
-    spark_configure()
+    # spark_configure()
     ssh_setup()
     fileSetKV(hosts_path, unit_get('private-address')+' ', get_unit_hostname())
     setLogging()
